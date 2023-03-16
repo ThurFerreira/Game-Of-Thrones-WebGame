@@ -1,18 +1,31 @@
-function UsuariosDAO(connection){
+function UsuariosDAO(connection) {
 	this._connection = connection();
 }
 
-UsuariosDAO.prototype.inserirUsuario = function(usuario){
-	this._connection.open( function(err, mongoclient){
-		mongoclient.collection("usuarios", function(err, collection){
-			collection.insert(usuario);
+UsuariosDAO.prototype.inserirUsuario = function (usuario) {
+	var MongoClient = require('mongodb').MongoClient;
+	var url = "mongodb://localhost:27017/";
 
-			mongoclient.close();
+	MongoClient.connect(url, function (err, db) {
+		if (err) throw err;
+		var dbo = db.db("got");
+		dbo.collection("usuarios").insertOne(usuario, function (err, res) {
+			if (err) throw err;
+			console.log("1 document inserted");
+			db.close();
 		});
 	});
+	
+	// this._connection.open(function (err, mongoclient) {
+	// 	mongoclient.collection("usuarios", function (err, collection) {
+	// 		collection.insert(usuario);
+
+	// 		mongoclient.close();
+	// 	});
+	// });
 }
 
-UsuariosDAO.prototype.autenticar = function(usuario, req, res){
+UsuariosDAO.prototype.autenticar = function (usuario, req, res) {
 	this._connection.open( function(err, mongoclient){
 		mongoclient.collection("usuarios", function(err, collection){
 			collection.find(usuario).toArray(function(err, result){
@@ -38,6 +51,6 @@ UsuariosDAO.prototype.autenticar = function(usuario, req, res){
 }
 
 
-module.exports = function(){
+module.exports = function () {
 	return UsuariosDAO;
 }

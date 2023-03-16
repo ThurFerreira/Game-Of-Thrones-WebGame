@@ -1,21 +1,14 @@
-/* importar o mongodb */
-var mongo = require('mongodb');
+const mongoclient = require('mongoose')
 
-var connMongoDB = function(){
-	console.log('Entrou na função de conexão');
-	var db = new mongo.Db(
-		'got',
-		new mongo.Server(
-			'localhost', //string contendo o endereço do servidor
-			27017, //porta de conexão
-			{}
-		),
-		{}
-	);
+var dataBaseAccess = function(){
 
-	return db;
+	mongoclient.connect("mongodb://localhost/got")
+	.then(() => {console.log("Conexão com o bd estabelecida")})
+	.catch((error) => console.log("Erro na conexão com o banco de dados: " + error))
+
+	return mongoclient
 }
 
 module.exports = function(){
-	return connMongoDB;
+	return dataBaseAccess
 }
