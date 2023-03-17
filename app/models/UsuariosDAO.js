@@ -1,8 +1,8 @@
-function UsuariosDAO(application, connection) {
+function UsuariosDAO(connection) {
 	this._connection = connection();
-	this._application = application();
-	this._db = this._application.config.dbConnection
+
 }
+
 
 // UsuariosDAO.prototype.inserirUsuario = function (usuario) {
 // 	var MongoClient = require('mongodb').MongoClient;
@@ -28,12 +28,11 @@ function UsuariosDAO(application, connection) {
 // }
 
 UsuariosDAO.prototype.inserirUsuario = function (usuario) {
-
-	console.log(usuario)
 	
-	var userSchema = this._connection.Mongoose.model('usuarios', this._db.UserSchema)
+	const userSchema = this._connection.Mongoose.model('usuarios', this._connection.UserSchema)
 	
-	const newInsert = new userSchema(usuario).save()
+	const newInsert = new userSchema(usuario)
+		.save()
 		.then(() => console.log("Usuario inserido com sucesso"))
 		.catch((error) => console.log("Falha ao inserir usuario no banco de dados"))
 	}
@@ -62,7 +61,6 @@ UsuariosDAO.prototype.autenticar = function (usuario, req, res) {
 		});
 	});
 }
-
 
 module.exports = function () {
 	return UsuariosDAO;
