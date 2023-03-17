@@ -4,6 +4,7 @@ module.exports = function(application){
 	});
 
 	application.post('/cadastrar', function(req, res){
+		console.log("entrou na rota /cadastrar")
 		application.app.controllers.cadastro.cadastrar(application, req, res);
 	});
 }
